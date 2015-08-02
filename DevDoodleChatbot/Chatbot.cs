@@ -7,6 +7,20 @@ namespace DevDoodleChatbot
     class Chatbot
     {
         Dictionary<string, Func<string[], string>> Commands = new Dictionary<string, Func<string[], string>>();
+        Dictionary<string, Func<string[], string>> OwnerCommands = new Dictionary<string, Func<string[], string>>();
+
+        Action _exitRequested;
+        public event Action ExitRequested
+        {
+            add
+            {
+                _exitRequested += value;
+            }
+            remove
+            {
+                _exitRequested -= value;
+            }
+        }
 
         public DDClient ChatClient
         {
@@ -26,10 +40,17 @@ namespace DevDoodleChatbot
             set;
         }
 
+        public string[] Owners
+        {
+            get;
+            private set;
+        }
+
         public Chatbot()
         {
             ChatClient = new DDClient();
             Commands.Add("alive", Command_Alive);
+            OwnerCommands.Add("stop", Command_Stop);
         }
 
         string Command_Alive(string[] args)
@@ -37,9 +58,19 @@ namespace DevDoodleChatbot
             return "Yes, I'm alive.";
         }
 
-        public void Start(int roomId, string username, string password, string prefix)
+        string Command_Stop(string[] args)
+        {
+            if (_exitRequested != null)
+            {
+                _exitRequested.Invoke();
+            }
+            return "Bot terminated.";
+        }
+
+        public void Start(int roomId, string username, string password, string prefix, params string[] owners)
         {
             Prefix = prefix;
+            Owners = owners;
             ChatClient.Login(username, password);
             ChatRoom = ChatClient.GetRoom(roomId);
             ChatRoom.OnChatEvent += ChatRoom_OnChatEvent;
@@ -62,6 +93,17 @@ namespace DevDoodleChatbot
             if (Commands.ContainsKey(command))
             {
                 output = Commands[command](args);
+            }
+            else if (OwnerCommands.ContainsKey(command))
+            {
+                if (Owners.Contains(e.ParsedJson["user"]))
+                {
+                    output = OwnerCommands[command](args);
+                }
+                else
+                {
+                    output = "You don't have the privilege to execute this command.";
+                }
             }
             else
             {
