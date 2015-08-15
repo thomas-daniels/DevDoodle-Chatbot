@@ -52,6 +52,7 @@ namespace DevDoodleChatbot
             Commands.Add("alive", Command_Alive);
             Commands.Add("random", Command_Random);
             Commands.Add("randomint", Command_RandomInt);
+            Commands.Add("listcommands", Command_ListCommands);
             OwnerCommands.Add("stop", Command_Stop);
         }
 
@@ -99,6 +100,11 @@ namespace DevDoodleChatbot
         CommandOutput Command_Random(string[] args)
         {
             return new CommandOutput(rnd.NextDouble().ToString(), true);
+        }
+
+        CommandOutput Command_ListCommands(string[] args)
+        {
+            return new CommandOutput(string.Join(", ", Commands.Keys.OrderBy(x => x)), true);
         }
 
         public void Start(int roomId, string username, string password, string prefix, params string[] owners)
