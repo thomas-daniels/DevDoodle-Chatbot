@@ -232,7 +232,7 @@ namespace DevDoodleChatbot
 
             Prefix = prefix;
             Owners = owners;
-            ChatClient.Login(username, password);
+            ChatClient.LogOn(username, password);
             ChatRoom = ChatClient.GetRoom(roomId);
             ChatRoom.OnChatEvent += ChatRoom_OnChatEvent;
             ChatRoom.Watch();

@@ -11,7 +11,7 @@ namespace DevDoodleChatbot
     {
         CookieCollection cookies = new CookieCollection();
 
-        public void Login(string name, string password)
+        public void LogOn(string name, string password)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpWebRequest req = WebRequest.CreateHttp("https://devdoodle.net/login/");
