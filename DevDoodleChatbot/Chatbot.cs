@@ -61,6 +61,7 @@ namespace DevDoodleChatbot
             Commands.Add("listcommands", Command_ListCommands);
             Commands.Add("xkcd", Command_Xkcd);
             Commands.Add("help", Command_Help);
+            Commands.Add("utc", Command_Utc);
             OwnerCommands.Add("stop", Command_Stop);
         }
 
@@ -180,6 +181,11 @@ namespace DevDoodleChatbot
                 return new CommandOutput(markdown, false);
             }
             return new CommandOutput("Invalid arguments.", true);
+        }
+
+        CommandOutput Command_Utc(string[] args)
+        {
+            return new CommandOutput(string.Format("{0} {1}", DateTime.UtcNow.ToLongDateString(), DateTime.UtcNow.ToLongTimeString()), true);
         }
 
         Dictionary<string, string> help = new Dictionary<string, string>()
