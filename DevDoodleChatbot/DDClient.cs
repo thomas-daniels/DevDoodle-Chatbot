@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace DevDoodleChatbot
 {
-    class DDClient
+    public class DDClient
     {
         CookieCollection cookies = new CookieCollection();
 

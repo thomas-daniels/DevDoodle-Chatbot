@@ -6,7 +6,7 @@ using System.Net;
 
 namespace DevDoodleChatbot
 {
-    class DDChatRoom : IDisposable
+    public class DDChatRoom : IDisposable
     {
         public int ID
         {

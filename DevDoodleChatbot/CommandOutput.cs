@@ -1,6 +1,6 @@
 ﻿namespace DevDoodleChatbot
 {
-    public class CommandOutput
+    class CommandOutput
     {
         public string Output
         {
