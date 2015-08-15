@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using CsQuery;
+using System.Net;
 
 namespace DevDoodleChatbot
 {
@@ -55,6 +58,7 @@ namespace DevDoodleChatbot
             Commands.Add("randomchoice", Command_RandomChoice);
             Commands.Add("shuffle", Command_Shuffle);
             Commands.Add("listcommands", Command_ListCommands);
+            Commands.Add("xkcd", Command_Xkcd);
             OwnerCommands.Add("stop", Command_Stop);
         }
 
@@ -135,6 +139,47 @@ namespace DevDoodleChatbot
             return new CommandOutput(string.Join(", ", Commands.Keys.OrderBy(x => x)), true);
         }
 
+        CommandOutput Command_Xkcd(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                return new CommandOutput("1 argument expected.", true);
+            }
+            if (args[0] == "404")
+            {
+                return new CommandOutput("404 is not a valid comic ID: http://xkcd.com/404 leads to an error page.", true);
+            }
+            int id;
+            if (args[0] == "now" || int.TryParse(args[0], out id))
+            {
+                CQ middleContainer = null;
+                int errorCode = -1;
+                try
+                {
+                    CQ document = CQ.CreateFromUrl("http://xkcd.com/" + args[0]);
+                    middleContainer = document.Select("#middleContainer");
+                }
+                catch (WebException we)
+                {
+                    errorCode = (int)((HttpWebResponse)we.Response).StatusCode;   
+                }
+                if (middleContainer == null)
+                {
+                    return new CommandOutput(errorCode == -1 ? "Comic not found." : "Server returned error. Status code: " + errorCode, true);
+                }
+                string middleContainerText = middleContainer[0].InnerHTML;
+                string lastLine = middleContainerText.Split(new string[] { "<br>", "</br>", "<br />" }, StringSplitOptions.RemoveEmptyEntries)
+                                                     .Last()
+                                                     .Split(new string[] { "<div" }, StringSplitOptions.None)[0]
+                                                     .Trim();
+                string imageUrl = lastLine.Split(' ')[4];
+                string escapedUrl = Regex.Replace(imageUrl, @"([_\(\)])", @"\$1");
+                string markdown = string.Format("![http://xkcd.com/{0}]({1})", args[0], escapedUrl);
+                return new CommandOutput(markdown, false);
+            }
+            return new CommandOutput("Invalid arguments.", true);
+        }
+
         public void Start(int roomId, string username, string password, string prefix, params string[] owners)
         {
             Prefix = prefix;
@@ -155,7 +200,7 @@ namespace DevDoodleChatbot
             string[] commandWithArgs = commandText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (commandWithArgs.Length == 0)
                 return;
-            string command = commandWithArgs[0];
+            string command = commandWithArgs[0].ToLowerInvariant();
             string[] args = commandWithArgs.Skip(1).ToArray();
             CommandOutput output = null;
             if (Commands.ContainsKey(command))
