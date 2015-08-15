@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 
 namespace DevDoodleChatbot
@@ -14,7 +15,7 @@ namespace DevDoodleChatbot
             Console.Write("Password: ");
             string pass = Console.ReadLine();
             Console.Write("Room number: ");
-            int room = int.Parse(Console.ReadLine());
+            int room = int.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
             Console.Write("Prefix: ");
             string prefix = Console.ReadLine();
             Console.Write("Owner name: ");
