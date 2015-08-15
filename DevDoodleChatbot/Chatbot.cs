@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using CsQuery;
 using System.Net;
+using System.Globalization;
 
 namespace DevDoodleChatbot
 {
@@ -84,7 +85,7 @@ namespace DevDoodleChatbot
         {
             if (args.Length == 0)
             {
-                return new CommandOutput(rnd.Next().ToString(), true);
+                return new CommandOutput(rnd.Next().ToString(CultureInfo.InvariantCulture), true);
             }
             else if (args.Length == 2)
             {
@@ -96,7 +97,7 @@ namespace DevDoodleChatbot
                     {
                         return new CommandOutput("The minimum cannot be greater than the maximum.", true);
                     }
-                    return new CommandOutput(rnd.Next(n1, n2).ToString(), true);
+                    return new CommandOutput(rnd.Next(n1, n2).ToString(CultureInfo.InvariantCulture), true);
                 }
                 else
                 {
@@ -108,7 +109,7 @@ namespace DevDoodleChatbot
 
         CommandOutput Command_Random(string[] args)
         {
-            return new CommandOutput(rnd.NextDouble().ToString(), true);
+            return new CommandOutput(rnd.NextDouble().ToString(CultureInfo.InvariantCulture), true);
         }
 
         CommandOutput Command_RandomChoice(string[] args)
