@@ -8,7 +8,7 @@ namespace DevDoodleChatbot
 {
     public class DDChatRoom : IDisposable
     {
-        public int ID
+        public int Id
         {
             get;
             private set;
@@ -32,7 +32,7 @@ namespace DevDoodleChatbot
 
         internal DDChatRoom(int id, CookieCollection cookieCollection)
         {
-            ID = id;
+            Id = id;
             foreach (Cookie c in cookieCollection)
             {
                 if (c.Name == "id")
@@ -46,8 +46,8 @@ namespace DevDoodleChatbot
         public void Watch()
         {
             List<KeyValuePair<string, string>> headers = new List<KeyValuePair<string, string>>();
-            headers.Add(new KeyValuePair<string, string>("Referer", "https://devdoodle.net/chat/" + ID));
-            ws = new WebSocket("wss://devdoodle.net:81/chat/" + ID, "", cookies, headers);
+            headers.Add(new KeyValuePair<string, string>("Referer", "https://devdoodle.net/chat/" + Id));
+            ws = new WebSocket("wss://devdoodle.net:81/chat/" + Id, "", cookies, headers);
             ws.MessageReceived += MessageReceived;
             ws.Open();
         }
