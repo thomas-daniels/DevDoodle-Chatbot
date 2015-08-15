@@ -80,14 +80,23 @@ namespace DevDoodleChatbot
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
             if (!disposed)
             {
+                if (disposing)
+                {
+                    ws.MessageReceived -= MessageReceived;
+                    ws.Dispose();
+                    cookies.Clear();
+                    cookies = null;
+                    ws = null;
+                }
                 disposed = true;
-                ws.MessageReceived -= MessageReceived;
-                ws.Dispose();
-                cookies.Clear();
-                cookies = null;
-                ws = null;
             }
         }
     }
