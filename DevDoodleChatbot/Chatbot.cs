@@ -112,7 +112,7 @@ namespace DevDoodleChatbot
             string s = string.Empty;
             if (output.Ping)
             {
-                s = string.Format("@{0} {1}", e.ParsedJson["user"], output);
+                s = string.Format("@{0} {1}", e.ParsedJson["user"], output.Output);
             }
             else
             {
