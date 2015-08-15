@@ -54,16 +54,16 @@ namespace DevDoodleChatbot
         public Chatbot()
         {
             ChatClient = new DDClient();
-            Commands.Add("alive", Command_Alive);
-            Commands.Add("random", Command_Random);
-            Commands.Add("randomint", Command_RandomInt);
-            Commands.Add("randomchoice", Command_RandomChoice);
-            Commands.Add("shuffle", Command_Shuffle);
-            Commands.Add("listcommands", Command_ListCommands);
-            Commands.Add("xkcd", Command_Xkcd);
-            Commands.Add("help", Command_Help);
-            Commands.Add("utc", Command_Utc);
-            OwnerCommands.Add("stop", Command_Stop);
+            Commands.Add("ALIVE", Command_Alive);
+            Commands.Add("RANDOM", Command_Random);
+            Commands.Add("RANDOMINT", Command_RandomInt);
+            Commands.Add("RANDOMCHOICE", Command_RandomChoice);
+            Commands.Add("SHUFFLE", Command_Shuffle);
+            Commands.Add("LISTCOMMANDS", Command_ListCommands);
+            Commands.Add("XKCD", Command_Xkcd);
+            Commands.Add("HELP", Command_Help);
+            Commands.Add("UTC", Command_Utc);
+            OwnerCommands.Add("STOP", Command_Stop);
         }
 
         CommandOutput Command_Alive(string[] args)
@@ -251,7 +251,7 @@ namespace DevDoodleChatbot
             string[] commandWithArgs = commandText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (commandWithArgs.Length == 0)
                 return;
-            string command = commandWithArgs[0].ToLowerInvariant();
+            string command = commandWithArgs[0].ToUpperInvariant();
             string[] args = commandWithArgs.Skip(1).ToArray();
             CommandOutput output = null;
             if (Commands.ContainsKey(command))
