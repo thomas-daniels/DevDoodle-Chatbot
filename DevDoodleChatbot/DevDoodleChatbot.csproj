@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Chatbot.cs" />
     <Compile Include="ChatEventHandler.cs" />
+    <Compile Include="CommandOutput.cs" />
     <Compile Include="DDChatRoom.cs" />
     <Compile Include="DDClient.cs" />
     <Compile Include="Program.cs" />

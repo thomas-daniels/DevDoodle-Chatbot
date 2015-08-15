@@ -6,8 +6,8 @@ namespace DevDoodleChatbot
 {
     class Chatbot
     {
-        Dictionary<string, Func<string[], string>> Commands = new Dictionary<string, Func<string[], string>>();
-        Dictionary<string, Func<string[], string>> OwnerCommands = new Dictionary<string, Func<string[], string>>();
+        Dictionary<string, Func<string[], CommandOutput>> Commands = new Dictionary<string, Func<string[], CommandOutput>>();
+        Dictionary<string, Func<string[], CommandOutput>> OwnerCommands = new Dictionary<string, Func<string[], CommandOutput>>();
 
         Action _exitRequested;
         public event Action ExitRequested
@@ -53,18 +53,18 @@ namespace DevDoodleChatbot
             OwnerCommands.Add("stop", Command_Stop);
         }
 
-        string Command_Alive(string[] args)
+        CommandOutput Command_Alive(string[] args)
         {
-            return "Yes, I'm alive.";
+            return new CommandOutput("Yes, I'm alive.", true);
         }
 
-        string Command_Stop(string[] args)
+        CommandOutput Command_Stop(string[] args)
         {
             if (_exitRequested != null)
             {
                 _exitRequested.Invoke();
             }
-            return "Bot terminated.";
+            return new CommandOutput("Bot terminated.", true);
         }
 
         public void Start(int roomId, string username, string password, string prefix, params string[] owners)
@@ -89,7 +89,7 @@ namespace DevDoodleChatbot
                 return;
             string command = commandWithArgs[0];
             string[] args = commandWithArgs.Skip(1).ToArray();
-            string output = string.Empty;
+            CommandOutput output = null;
             if (Commands.ContainsKey(command))
             {
                 output = Commands[command](args);
@@ -102,15 +102,23 @@ namespace DevDoodleChatbot
                 }
                 else
                 {
-                    output = "You don't have the privilege to execute this command.";
+                    output = new CommandOutput("You don't have the privilege to execute this command.", true);
                 }
             }
             else
             {
-                output = "Command not found.";
+                output = new CommandOutput("Command not found.", true);
             }
-            output = string.Format("@{0} {1}", e.ParsedJson["user"], output);
-            ChatRoom.Send(output);
+            string s = string.Empty;
+            if (output.Ping)
+            {
+                s = string.Format("@{0} {1}", e.ParsedJson["user"], output);
+            }
+            else
+            {
+                s = output.Output;
+            }
+            ChatRoom.Send(s);
         }
     }
 }
