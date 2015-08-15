@@ -46,7 +46,7 @@ namespace DevDoodleChatbot
             }
             if (!success)
             {
-                throw new Exception("Failed to log in: could not get `id` cookie. Check your username and password.");
+                throw new LogOnException("Failed to log in: could not get `id` cookie. Check your username and password.");
             }
             cookies = resp.Cookies;
         }

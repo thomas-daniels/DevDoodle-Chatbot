@@ -58,6 +58,7 @@
     <Compile Include="CommandOutput.cs" />
     <Compile Include="DDChatRoom.cs" />
     <Compile Include="DDClient.cs" />
+    <Compile Include="LogOnException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
