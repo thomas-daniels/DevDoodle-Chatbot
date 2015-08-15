@@ -34,21 +34,23 @@ namespace DevDoodleChatbot
                 stream.Write(postBytes, 0, postBytes.Length);
             }
 
-            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-            bool success = false;
-            foreach (Cookie c in resp.Cookies)
+            using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
             {
-                if (c.Name == "id")
+                bool success = false;
+                foreach (Cookie c in resp.Cookies)
                 {
-                    success = true;
-                    break;
+                    if (c.Name == "id")
+                    {
+                        success = true;
+                        break;
+                    }
                 }
+                if (!success)
+                {
+                    throw new LogOnException("Failed to log in: could not get `id` cookie. Check your username and password.");
+                }
+                cookies = resp.Cookies;
             }
-            if (!success)
-            {
-                throw new LogOnException("Failed to log in: could not get `id` cookie. Check your username and password.");
-            }
-            cookies = resp.Cookies;
         }
 
         public DDChatRoom GetRoom(int id)
