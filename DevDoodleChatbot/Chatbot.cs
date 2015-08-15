@@ -7,10 +7,11 @@ using System.Net;
 
 namespace DevDoodleChatbot
 {
-    class Chatbot
+    class Chatbot : IDisposable
     {
         Dictionary<string, Func<string[], CommandOutput>> Commands = new Dictionary<string, Func<string[], CommandOutput>>();
         Dictionary<string, Func<string[], CommandOutput>> OwnerCommands = new Dictionary<string, Func<string[], CommandOutput>>();
+        bool disposed = false;
 
         Action _exitRequested;
         public event Action ExitRequested
@@ -219,6 +220,9 @@ namespace DevDoodleChatbot
 
         public void Start(int roomId, string username, string password, string prefix, params string[] owners)
         {
+            if (disposed)
+                throw new ObjectDisposedException("Chatbot");
+
             Prefix = prefix;
             Owners = owners;
             ChatClient.Login(username, password);
@@ -229,6 +233,9 @@ namespace DevDoodleChatbot
 
         private void ChatRoom_OnChatEvent(object sender, ChatEventArgs e)
         {
+            if (disposed)
+                return;
+
             if (e.ParsedJson["event"] != "add")
                 return;
             if (!e.ParsedJson["body"].StartsWith(Prefix))
@@ -269,6 +276,17 @@ namespace DevDoodleChatbot
                 s = output.Output;
             }
             ChatRoom.Send(s);
+        }
+
+        public void Dispose()
+        {
+            if (!disposed)
+            {
+                disposed = true;
+                ChatRoom.OnChatEvent -= ChatRoom_OnChatEvent;
+                ChatRoom.Dispose();
+                ChatRoom = null;
+            }
         }
     }
 }

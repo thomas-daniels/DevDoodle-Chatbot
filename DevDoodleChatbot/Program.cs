@@ -6,6 +6,7 @@ namespace DevDoodleChatbot
     class Program
     {
         static ManualResetEvent mre = new ManualResetEvent(false);
+        static Chatbot bot;
         static void Main(string[] args)
         {
             Console.Write("Username: ");
@@ -19,7 +20,7 @@ namespace DevDoodleChatbot
             Console.Write("Owner name: ");
             string owner = Console.ReadLine();
             Console.Clear();
-            Chatbot bot = new Chatbot();
+            bot = new Chatbot();
             bot.ExitRequested += Bot_ExitRequested;
             bot.Start(room, name, pass, prefix, owner);
             bot.ChatRoom.OnChatEvent += ChatRoom_OnChatEvent;
@@ -35,6 +36,7 @@ namespace DevDoodleChatbot
 
         private static void Bot_ExitRequested()
         {
+            bot.Dispose();
             mre.Set();
         }
     }

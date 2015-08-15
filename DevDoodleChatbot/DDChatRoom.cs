@@ -6,7 +6,7 @@ using System.Net;
 
 namespace DevDoodleChatbot
 {
-    class DDChatRoom
+    class DDChatRoom : IDisposable
     {
         public int ID
         {
@@ -15,6 +15,7 @@ namespace DevDoodleChatbot
         }
         WebSocket ws = null;
         List<KeyValuePair<string, string>> cookies = new List<KeyValuePair<string, string>>();
+        bool disposed = false;
 
         EventHandler<ChatEventArgs> chatEvent;
         public event EventHandler<ChatEventArgs> OnChatEvent
@@ -47,21 +48,27 @@ namespace DevDoodleChatbot
             List<KeyValuePair<string, string>> headers = new List<KeyValuePair<string, string>>();
             headers.Add(new KeyValuePair<string, string>("Referer", "https://devdoodle.net/chat/" + ID));
             ws = new WebSocket("wss://devdoodle.net:81/chat/" + ID, "", cookies, headers);
-            ws.MessageReceived += delegate (object sender, MessageReceivedEventArgs e)
-            {
-                string json = e.Message;
-                Dictionary<string, string> parsedJson = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                ChatEventArgs cea = new ChatEventArgs(json, parsedJson);
-                if (chatEvent != null)
-                {
-                    chatEvent(this, cea);
-                }
-            };
+            ws.MessageReceived += MessageReceived;
             ws.Open();
+        }
+
+        protected void MessageReceived(object sender, MessageReceivedEventArgs e)
+        {
+            if (disposed)
+                return;
+            string json = e.Message;
+            Dictionary<string, string> parsedJson = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            ChatEventArgs cea = new ChatEventArgs(json, parsedJson);
+            if (chatEvent != null)
+            {
+                chatEvent(this, cea);
+            }
         }
 
         public void Send(string message)
         {
+            if (disposed)
+                throw new ObjectDisposedException("DDChatRoom");
             Dictionary<string, string> msg = new Dictionary<string, string>()
             {
                 { "event", "post" },
@@ -69,6 +76,19 @@ namespace DevDoodleChatbot
             };
             string json = JsonConvert.SerializeObject(msg);
             ws.Send(json);
+        }
+
+        public void Dispose()
+        {
+            if (!disposed)
+            {
+                disposed = true;
+                ws.MessageReceived -= MessageReceived;
+                ws.Dispose();
+                cookies.Clear();
+                cookies = null;
+                ws = null;
+            }
         }
     }
 }
