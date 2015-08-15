@@ -50,6 +50,8 @@ namespace DevDoodleChatbot
         {
             ChatClient = new DDClient();
             Commands.Add("alive", Command_Alive);
+            Commands.Add("random", Command_Random);
+            Commands.Add("randomint", Command_RandomInt);
             OwnerCommands.Add("stop", Command_Stop);
         }
 
@@ -65,6 +67,38 @@ namespace DevDoodleChatbot
                 _exitRequested.Invoke();
             }
             return new CommandOutput("Bot terminated.", true);
+        }
+
+        Random rnd = new Random();
+        CommandOutput Command_RandomInt(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                return new CommandOutput(rnd.Next().ToString(), true);
+            }
+            else if (args.Length == 2)
+            {
+                int n1;
+                int n2;
+                if (int.TryParse(args[0], out n1) && int.TryParse(args[1], out n2))
+                {
+                    if (n1 > n2)
+                    {
+                        return new CommandOutput("The minimum cannot be greater than the maximum.", true);
+                    }
+                    return new CommandOutput(rnd.Next(n1, n2).ToString(), true);
+                }
+                else
+                {
+                    return new CommandOutput("Invalid arguments.", true);
+                }
+            }
+            return new CommandOutput(string.Format("0 or 2 arguments expected, {0} given.", args.Length), true);
+        }
+
+        CommandOutput Command_Random(string[] args)
+        {
+            return new CommandOutput(rnd.NextDouble().ToString(), true);
         }
 
         public void Start(int roomId, string username, string password, string prefix, params string[] owners)
