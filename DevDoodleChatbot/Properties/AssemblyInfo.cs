@@ -39,4 +39,4 @@ using System.Runtime.InteropServices;
 
 // The next attribute is set to false because MessageReceivedEventArgs, from Websocket4Net, is not CLS-compliant.
 [assembly: CLSCompliant(false)]
-[assembly: NeutralResourcesLanguage("en-150")]
+[assembly: NeutralResourcesLanguage("en-US")]
