@@ -14,7 +14,7 @@ namespace DevDoodleChatbot
         public void Login(string name, string password)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            HttpWebRequest req = HttpWebRequest.CreateHttp("https://devdoodle.net/login/");
+            HttpWebRequest req = WebRequest.CreateHttp("https://devdoodle.net/login/");
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
             req.Referer = "https://devdoodle.net/";
