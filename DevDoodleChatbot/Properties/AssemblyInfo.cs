@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Resources;
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -36,5 +37,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
+// The next attribute is set to false because MessageReceivedEventArgs, from Websocket4Net, is not CLS-compliant.
 [assembly: CLSCompliant(false)]
-// This is false because MessageReceivedEventArgs, from Websocket4Net, is not CLS-compliant.
+[assembly: NeutralResourcesLanguage("en-150")]

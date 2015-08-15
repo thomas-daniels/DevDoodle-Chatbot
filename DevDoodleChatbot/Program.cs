@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Reflection;
+using System.Resources;
 using System.Threading;
 
 namespace DevDoodleChatbot
@@ -10,22 +12,22 @@ namespace DevDoodleChatbot
         static Chatbot bot;
         static void Main()
         {
-            Console.Write("Username: ");
+            Console.Write(Properties.Resources.username);
             string name = Console.ReadLine();
-            Console.Write("Password: ");
+            Console.Write(Properties.Resources.password);
             string pass = Console.ReadLine();
-            Console.Write("Room number: ");
+            Console.Write(Properties.Resources.roomNumber);
             int room = int.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-            Console.Write("Prefix: ");
+            Console.Write(Properties.Resources.prefix);
             string prefix = Console.ReadLine();
-            Console.Write("Owner name: ");
+            Console.Write(Properties.Resources.owner);
             string owner = Console.ReadLine();
             Console.Clear();
             bot = new Chatbot();
             bot.ExitRequested += Bot_ExitRequested;
             bot.Start(room, name, pass, prefix, owner);
             bot.ChatRoom.OnChatEvent += ChatRoom_OnChatEvent;
-            Console.WriteLine("Bot started.");
+            Console.WriteLine(Properties.Resources.botStarted);
             mre.WaitOne();
         }
 

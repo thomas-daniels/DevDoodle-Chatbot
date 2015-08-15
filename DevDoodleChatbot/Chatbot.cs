@@ -276,7 +276,7 @@ namespace DevDoodleChatbot
             string s = string.Empty;
             if (output.Ping)
             {
-                s = string.Format(CultureInfo.InvariantCulture, "@{0} {1}", e.ParsedJson["user"], output.Output);
+                s = string.Format(CultureInfo.InvariantCulture, Properties.Resources.messageFormat, e.ParsedJson["user"], output.Output);
             }
             else
             {
