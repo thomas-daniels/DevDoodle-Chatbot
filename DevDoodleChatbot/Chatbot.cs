@@ -104,7 +104,7 @@ namespace DevDoodleChatbot
                     return new CommandOutput("Invalid arguments.", true);
                 }
             }
-            return new CommandOutput(string.Format("0 or 2 arguments expected, {0} given.", args.Length), true);
+            return new CommandOutput(string.Format(CultureInfo.InvariantCulture, "0 or 2 arguments expected, {0} given.", args.Length), true);
         }
 
         CommandOutput Command_Random(string[] args)
@@ -178,7 +178,7 @@ namespace DevDoodleChatbot
                                                      .Trim();
                 string imageUrl = lastLine.Split(' ')[4];
                 string escapedUrl = Regex.Replace(imageUrl, @"([_\(\)])", @"\$1");
-                string markdown = string.Format("![http://xkcd.com/{0}]({1})", args[0], escapedUrl);
+                string markdown = string.Format(CultureInfo.InvariantCulture, "![http://xkcd.com/{0}]({1})", args[0], escapedUrl);
                 return new CommandOutput(markdown, false);
             }
             return new CommandOutput("Invalid arguments.", true);
@@ -186,7 +186,7 @@ namespace DevDoodleChatbot
 
         CommandOutput Command_Utc(string[] args)
         {
-            return new CommandOutput(string.Format("{0} {1}", DateTime.UtcNow.ToLongDateString(), DateTime.UtcNow.ToLongTimeString()), true);
+            return new CommandOutput(string.Format(CultureInfo.InvariantCulture, "{0} {1}", DateTime.UtcNow.ToLongDateString(), DateTime.UtcNow.ToLongTimeString()), true);
         }
 
         Dictionary<string, string> help = new Dictionary<string, string>()
@@ -209,14 +209,14 @@ namespace DevDoodleChatbot
             }
             if (args.Length == 0)
             {
-                return new CommandOutput(string.Format("I'm a chatbot. To see a list of commands, run `{0}listcommands`. To get help for a specific command, run `{0}help <command>`.",
+                return new CommandOutput(string.Format(CultureInfo.InvariantCulture, "I'm a chatbot. To see a list of commands, run `{0}listcommands`. To get help for a specific command, run `{0}help <command>`.",
                     Prefix), true);
             }
             else
             {
                 if (help.ContainsKey(args[0]))
                 {
-                    return new CommandOutput(string.Format(help[args[0]], Prefix), true);
+                    return new CommandOutput(string.Format(CultureInfo.InvariantCulture, help[args[0]], Prefix), true);
                 }
                 else
                 {
@@ -276,7 +276,7 @@ namespace DevDoodleChatbot
             string s = string.Empty;
             if (output.Ping)
             {
-                s = string.Format("@{0} {1}", e.ParsedJson["user"], output.Output);
+                s = string.Format(CultureInfo.InvariantCulture, "@{0} {1}", e.ParsedJson["user"], output.Output);
             }
             else
             {
