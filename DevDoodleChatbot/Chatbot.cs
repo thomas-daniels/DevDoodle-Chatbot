@@ -245,7 +245,7 @@ namespace DevDoodleChatbot
 
             if (e.ParsedJson["event"] != "add")
                 return;
-            if (!e.ParsedJson["body"].StartsWith(Prefix))
+            if (!e.ParsedJson["body"].StartsWith(Prefix, StringComparison.Ordinal))
                 return;
             string commandText = e.ParsedJson["body"].Remove(0, Prefix.Length);
             string[] commandWithArgs = commandText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
