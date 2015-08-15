@@ -59,6 +59,7 @@ namespace DevDoodleChatbot
             Commands.Add("shuffle", Command_Shuffle);
             Commands.Add("listcommands", Command_ListCommands);
             Commands.Add("xkcd", Command_Xkcd);
+            Commands.Add("help", Command_Help);
             OwnerCommands.Add("stop", Command_Stop);
         }
 
@@ -161,7 +162,7 @@ namespace DevDoodleChatbot
                 }
                 catch (WebException we)
                 {
-                    errorCode = (int)((HttpWebResponse)we.Response).StatusCode;   
+                    errorCode = (int)((HttpWebResponse)we.Response).StatusCode;
                 }
                 if (middleContainer == null)
                 {
@@ -178,6 +179,42 @@ namespace DevDoodleChatbot
                 return new CommandOutput(markdown, false);
             }
             return new CommandOutput("Invalid arguments.", true);
+        }
+
+        Dictionary<string, string> help = new Dictionary<string, string>()
+        {
+            { "alive", "Checks whether the bot is alive. It will simply post a reply. Syntax: `{0}alive`" },
+            { "help", "Gets help, general or for a command. Syntax: `{0}help [ <command> ]`" },
+            { "listcommands", "Gets a list of commands. Syntax: `{0}listcommands`" },
+            { "randomint", "Returns a random int, optionally within an inclusive lower bound and exclusive upper bound. Syntax: `>>randomint [ <lower> <upper> ]`" },
+            { "random", "Returns a random double between 0.0 and 1.0. Syntax: `>>random`" },
+            { "randomchoice", "Picks a random item from a list. Syntax: `>>randomchoice 1 [ 2 [ 3 [ 4 ... ] ] ]`" },
+            { "shuffle", "Shuffles a list. Syntax: `>>shuffle 1 [ 2 [ 3 [ 4 ... ] ] ]`" },
+            { "xkcd", "Displays the specified xkcd comic. Syntax: `>>xkcd <comic>`" },
+            { "stop", "Only for bot owners. Stops the bot. Syntax: `>>stop`" }
+        };
+        CommandOutput Command_Help(string[] args)
+        {
+            if (args.Length > 1)
+            {
+                return new CommandOutput("0 or 1 argument(s) expected.", true);
+            }
+            if (args.Length == 0)
+            {
+                return new CommandOutput(string.Format("I'm a chatbot. To see a list of commands, run `{0}listcommands`. To get help for a specific command, run `{0}help <command>`.",
+                    Prefix), true);
+            }
+            else
+            {
+                if (help.ContainsKey(args[0]))
+                {
+                    return new CommandOutput(string.Format(help[args[0]], Prefix), true);
+                }
+                else
+                {
+                    return new CommandOutput("No help entry found.", true);
+                }
+            }
         }
 
         public void Start(int roomId, string username, string password, string prefix, params string[] owners)
