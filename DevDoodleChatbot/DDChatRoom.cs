@@ -54,7 +54,7 @@ namespace DevDoodleChatbot
 
         protected void MessageReceived(object sender, MessageReceivedEventArgs e)
         {
-            if (disposed)
+            if (disposed || e == null)
                 return;
             string json = e.Message;
             Dictionary<string, string> parsedJson = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
