@@ -52,6 +52,8 @@ namespace DevDoodleChatbot
             Commands.Add("alive", Command_Alive);
             Commands.Add("random", Command_Random);
             Commands.Add("randomint", Command_RandomInt);
+            Commands.Add("randomchoice", Command_RandomChoice);
+            Commands.Add("shuffle", Command_Shuffle);
             Commands.Add("listcommands", Command_ListCommands);
             OwnerCommands.Add("stop", Command_Stop);
         }
@@ -100,6 +102,32 @@ namespace DevDoodleChatbot
         CommandOutput Command_Random(string[] args)
         {
             return new CommandOutput(rnd.NextDouble().ToString(), true);
+        }
+
+        CommandOutput Command_RandomChoice(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                return new CommandOutput("You didn't provide any arguments.", true);
+            }
+            string chosen = args[rnd.Next(args.Length)];
+            return new CommandOutput(chosen, true);
+        }
+
+        CommandOutput Command_Shuffle(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                return new CommandOutput("You didn't provide any arguments.", true);
+            }
+            for (int i = 0; i < args.Length; i++)
+            {
+                int j = rnd.Next(args.Length);
+                string temp = args[j];
+                args[j] = args[i];
+                args[i] = temp;
+            }
+            return new CommandOutput(string.Join(" ", args), true);
         }
 
         CommandOutput Command_ListCommands(string[] args)
