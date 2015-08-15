@@ -7,7 +7,7 @@ namespace DevDoodleChatbot
     {
         static ManualResetEvent mre = new ManualResetEvent(false);
         static Chatbot bot;
-        static void Main(string[] args)
+        static void Main()
         {
             Console.Write("Username: ");
             string name = Console.ReadLine();
