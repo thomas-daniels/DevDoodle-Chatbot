@@ -145,16 +145,20 @@ namespace DevDoodleChatbot
 
         CommandOutput Command_Xkcd(string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length > 1)
             {
-                return new CommandOutput("1 argument expected.", true);
+                return new CommandOutput("0 or 1 argument(s) expected.", true);
+            }
+            if (args.Length == 0)
+            {
+                args = new string[] { "" };
             }
             if (args[0] == "404")
             {
                 return new CommandOutput("404 is not a valid comic ID: http://xkcd.com/404 leads to an error page.", true);
             }
             int id;
-            if (args[0] == "now" || int.TryParse(args[0], out id))
+            if (args[0] == "now" || args[0] == "" || int.TryParse(args[0], out id))
             {
                 CQ middleContainer = null;
                 int errorCode = -1;
