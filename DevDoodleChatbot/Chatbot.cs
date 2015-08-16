@@ -140,7 +140,7 @@ namespace DevDoodleChatbot
 
         CommandOutput Command_ListCommands(string[] args)
         {
-            return new CommandOutput(string.Join(", ", Commands.Keys.OrderBy(x => x)), true);
+            return new CommandOutput(string.Join(", ", Commands.Keys.OrderBy(x => x).Select(x => x.ToLowerInvariant())), true);
         }
 
         CommandOutput Command_Xkcd(string[] args)
